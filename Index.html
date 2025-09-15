@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva Sentai-Rangers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.5s ease;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Exo 2', sans-serif;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom styles for select dropdown */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 0.7rem center;
+            background-size: 0.65rem auto;
+        }
+        .image-container {
+            position: relative;
+        }
+        .adapted-dot {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            width: 0.85rem;
+            height: 0.85rem;
+            background-color: #f97316; /* orange-500 */
+            border-radius: 9999px;
+            border: 2px solid white;
+            box-shadow: 0 0 8px rgba(0,0,0,0.6);
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+
+    <div id="app" class="container mx-auto p-4 md:p-8">
+        
+        <!-- Pantalla Principal -->
+        <div id="main-screen">
+            <header class="text-center mb-8 fade-in">
+                <h1 class="text-4xl md:text-5xl font-bold mb-2">Guía Interactiva</h1>
+                <h2 class="text-2xl md:text-3xl text-gray-400">Super Sentai & Power Rangers</h2>
+                <div class="mt-6 flex justify-center items-center space-x-2 md:space-x-4">
+                    <button id="btn-original" class="py-2 px-6 rounded-lg font-semibold transition-all duration-300">Original</button>
+                    <button id="btn-adaptacion" class="py-2 px-6 rounded-lg font-semibold transition-all duration-300">Adaptación</button>
+                    <div class="flex items-center space-x-2 bg-gray-700 p-1 rounded-lg">
+                        <select id="sort-by" class="bg-gray-700 text-white rounded-md py-1 px-2 border-0 focus:ring-0">
+                            <option value="year">Año</option>
+                            <option value="score">Puntaje</option>
+                        </select>
+                        <button id="sort-order" class="p-2 rounded-md hover:bg-gray-600 transition-colors">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            <main id="series-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+                <!-- Las tarjetas de series se insertarán aquí -->
+            </main>
+        </div>
+
+        <!-- Pantalla de Detalles -->
+        <div id="detail-screen" class="hidden fade-in">
+             <div class="flex justify-between items-center mb-6">
+                <button id="back-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300">
+                    &larr; Volver
+                </button>
+                <div id="detail-nav" class="flex space-x-2">
+                    <button id="prev-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">&lt; Anterior</button>
+                    <button id="next-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">Siguiente &gt;</button>
+                </div>
+            </div>
+            <div id="detail-content" class="bg-gray-900 rounded-lg shadow-2xl overflow-hidden md:flex md:space-x-8 p-6 md:p-8">
+                <!-- El contenido del detalle se insertará aquí -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const seriesData = [
+            { id: 1, year: 1975, originalTitle: "Himitsu Sentai Gorenger", originalTitleEs: "Escuadrón Secreto Gorenger", originalScore: "7.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Fue la serie que lo empezó todo, estableciendo el concepto de un equipo de cinco héroes con colores distintivos. La trama se centra en una organización secreta que recluta a cinco jóvenes para luchar contra el 'Ejército de la Cruz Negra', que busca dominar el mundo. Su tono es una mezcla de espionaje y acción.<br><br><b>Adaptación y Diferencias:</b> Nunca fue adaptada a Power Rangers. La franquicia americana comenzaría a adaptar series mucho después y esta no presentaba un robot gigante combinable, un elemento que se volvería estándar más adelante.", posterOriginal: "https://lh3.googleusercontent.com/d/1u8ZFhbJ2cykMiBw3-4kFgFTHFfIRotmk", posterAdaptation: null, producer: null },
+            { id: 2, year: 1977, originalTitle: "J.A.K.Q. Dengekitai", originalTitleEs: "J.A.K.Q. Equipo de Ataque Eléctrico", originalScore: "6/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Con un tono más oscuro y maduro, esta serie sigue a cuatro jóvenes que son convertidos en cíborgs para luchar contra una organización criminal global llamada 'CRIME'. Cada miembro está basado en una carta de póker (As, Diamante, Trébol, Corazón).<br><br><b>Adaptación y Diferencias:</b> No fue adaptada. Es una de las temporadas más cortas y su tono serio no encajaba con el molde que Power Rangers adoptaría. Fue un fracaso comercial en su momento.", posterOriginal: "https://lh3.googleusercontent.com/d/1fYvhKsgdz6llpFVaeub35rVrui38wYTj", posterAdaptation: null, producer: null },
+            { id: 3, year: 1979, originalTitle: "Battle Fever J", originalTitleEs: "Fiebre de Batalla J", originalScore: "6.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Esta es la serie que oficialmente acuñó el término 'Super Sentai' y, crucialmente, fue la primera en introducir un robot gigante, el Battle Fever Robo. La trama involucra a un equipo de agentes de diferentes partes del mundo (Japón, Francia, URSS, Kenia y América) que luchan contra la sociedad secreta 'Egos'.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada. Su origen como una colaboración con Marvel Comics es una curiosidad histórica, y la introducción del Mecha cambió la fórmula para siempre.", posterOriginal: "https://media.themoviedb.org/t/p/w500/t8goX9fQskkNn8dLopeg6hfoJOG.jpg", posterAdaptation: null, producer: null },
+            { id: 4, year: 1980, originalTitle: "Denshi Sentai Denziman", originalTitleEs: "Escuadrón Electrónico Denziman", originalScore: "7/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Hace 3000 años, el Clan Vader destruyó el planeta Denji. Una isla de este planeta aterrizó en la Tierra, y sus descendientes despiertan para luchar contra el Clan Vader cuando estos regresan para conquistar la Tierra. Introdujo diseños de villanos muy memorables y fue la primera en tener visores con formas únicas.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada.", posterOriginal: "https://image.tmdb.org/t/p/original/iC7sBy1SsCS3CnNHUxbWJua6lPg.jpg", posterAdaptation: null, producer: null },
+            { id: 5, year: 1981, originalTitle: "Taiyo Sentai Sun Vulcan", originalTitleEs: "Escuadrón Solar Sun Vulcan", originalScore: "7/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> La única serie protagonizada por un equipo de solo tres miembros, representando el aire, la tierra y el mar. Un equipo de las fuerzas militares lucha contra un imperio de las máquinas que amenaza la paz mundial. Es una secuela directa de Denziman, algo muy inusual en la franquicia.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada.", posterOriginal: "https://image.tmdb.org/t/p/original/2MekPiMGTYbh6m2mHEFrXjHjyUH.jpg", posterAdaptation: null, producer: null },
+            { id: 6, year: 1982, originalTitle: "Dai Sentai Goggle-V", originalTitleEs: "Gran Escuadrón Goggle-V", originalScore: "6.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Cuando un imperio de la ciencia oscura amenaza con conquistar el mundo, un científico recluta a cinco jóvenes, incluido un famoso explorador, para usar el poder de gemas antiguas. La temática combina gimnasia rítmica y civilizaciones antiguas.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada.", posterOriginal: "https://image.tmdb.org/t/p/original/3g36i9SimxWOO4Fc7bT1Jubs57G.jpg", posterAdaptation: null, producer: null },
+            { id: 7, year: 1983, originalTitle: "Kagaku Sentai Dynaman", originalTitleEs: "Escuadrón Científico Dynaman", originalScore: "7/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Un grupo de cinco inventores es reclutado para convertirse en los Dynaman y luchar contra el Imperio Jashinka, una civilización de reptiles que evolucionó en el centro de la Tierra y ahora busca reclamar la superficie. Es famosa por su uso masivo de explosivos.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada, pero fue doblada al inglés como una parodia cómica en el show 'Night Flight' en EE.UU.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BYTgxYmE4OGUtOTAyZC00MDg2LWI2ZTItYjYzOTljNzk0ZWUzXkEyXkFqcGc@._V1_.jpg", posterAdaptation: null, producer: null },
+            { id: 8, year: 1984, originalTitle: "Choudenshi Bioman", originalTitleEs: "Super Electrónico Bioman", originalScore: "8/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Hace 500 años, el robot gigante Bio Robo llegó a la Tierra y otorgó 'Bio Partículas' a cinco personas. En el presente, sus descendientes son reunidos para luchar contra el Nuevo Imperio Gear. Fue revolucionaria por ser la primera en tener dos mujeres en el equipo y un villano que no era completamente malvado.<br><br><b>Adaptación y Diferencias:</b> Saban intentó adaptarla antes que Zyuranger, pero el proyecto no prosperó.", posterOriginal: "https://i.pinimg.com/736x/a5/b7/b5/a5b7b5d453089208484fa1d1b79d9305.jpg", posterAdaptation: null, producer: null },
+            { id: 9, year: 1985, originalTitle: "Dengeki Sentai Changeman", originalTitleEs: "Escuadrón Eléctrico Changeman", originalScore: "8.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Durante un entrenamiento militar, cinco soldados son bañados por la 'Fuerza Terrestre', una energía mística que les permite transformarse en los Changeman para luchar contra el imperio alienígena Gozma. Tiene una fuerte temática militar y mitológica.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada.", posterOriginal: "https://image.tmdb.org/t/p/original/pHC80SHVrlQLHjq88isra3r3GV3.jpg", posterAdaptation: null, producer: null },
+            { id: 10, year: 1986, originalTitle: "Choushinsei Flashman", originalTitleEs: "Supernova Flashman", originalScore: "8/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> La trama sigue a cinco jóvenes que fueron secuestrados de la Tierra cuando eran niños por cazadores de alienígenas. Fueron rescatados y criados en diferentes planetas, desarrollando superhabilidades. Regresan a la Tierra para defenderla y buscar a sus familias biológicas. Tiene un final muy agridulce.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada.", posterOriginal: "https://image.tmdb.org/t/p/original/dinylNB08c4dirxN9OqHa3kHY9s.jpg", posterAdaptation: null, producer: null },
+            { id: 11, year: 1987, originalTitle: "Hikari Sentai Maskman", originalTitleEs: "Escuadrón de Luz Maskman", originalScore: "8.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Fue la primera serie en introducir el 'poder del aura' y un sexto ranger prototipo. Un equipo de artistas marciales lucha contra el Imperio Subterráneo Tube. La trama tiene un fuerte componente romántico, ya que la novia del Red Ranger es secuestrada y se convierte en una de las villanas.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada.", posterOriginal: "https://media.themoviedb.org/t/p/w500/dupV2Bm1W20yypWsMoEAx6AohSR.jpg", posterAdaptation: null, producer: null },
+            { id: 12, year: 1988, originalTitle: "Choujyu Sentai Liveman", originalTitleEs: "Escuadrón de Super Bestias Liveman", originalScore: "9/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Con un tono muy oscuro y personal, la historia sigue a tres estudiantes de una academia científica que deben luchar contra sus antiguos compañeros, quienes asesinaron a sus amigos y vendieron sus almas a una fuerza maligna para obtener poder. El equipo comienza con tres miembros y luego se expande a cinco.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada.", posterOriginal: "https://media.themoviedb.org/t/p/w500/hbMV06yJ6nHWj0LweEQCDXWhXcq.jpg", posterAdaptation: null, producer: null },
+            { id: 13, year: 1989, originalTitle: "Kousoku Sentai Turboranger", originalTitleEs: "Escuadrón de Alta Velocidad Turboranger", originalScore: "6.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Un grupo de estudiantes de secundaria que fueron imbuidos con 'energía de hada' deben luchar contra las Cien Tribus de Demonios. Fue la primera serie con temática principal de automóviles y celebró el décimo aniversario del Super Sentai.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada.", posterOriginal: "https://image.tmdb.org/t/p/original/1Dnjamuo2zbcThmEzvlzajpamDg.jpg", posterAdaptation: null, producer: null },
+            { id: 14, year: 1990, originalTitle: "Chikyu Sentai Fiveman", originalTitleEs: "Escuadrón Terrestre Fiveman", originalScore: "5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Cinco hermanos, que trabajan como maestros de escuela, usan la tecnología desarrollada por sus padres desaparecidos para luchar contra el Imperio Galáctico Zone. Fue una de las series con menor audiencia en su momento.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada.", posterOriginal: "https://image.tmdb.org/t/p/original/6hopyZxmgL9vTuvCr56kFhv0k42.jpg", posterAdaptation: null, producer: null },
+            { id: 15, year: 1991, originalTitle: "Chōjin Sentai Jetman", originalTitleEs: "Escuadrón de Hombres Pájaro Jetman", originalScore: "10/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Considerada por muchos como la obra maestra del Sentai. Después de un ataque a una nave espacial, las 'Birdonic Waves' que darían poder al equipo se esparcen por Japón, alcanzando a cuatro civiles al azar. El único miembro original, el Red Ranger, debe reunirlos mientras su novia es convertida en una comandante enemiga. La trama es un drama intenso con un final impactante.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada. Su éxito salvó a la franquicia de la cancelación.", posterOriginal: "https://i.pinimg.com/474x/f3/8c/f0/f38cf02b6afe3c52bb618dd5945544ca.jpg", posterAdaptation: null, producer: null },
+            { id: 16, year: 1992, originalTitle: "Kyōryū Sentai Zyuranger", originalTitleEs: "Escuadrón Dinosaurio Zyuranger", originalScore: "7.5/10", adaptationTitle: "Mighty Morphin Power Rangers (T1)", adaptationScore: "9/10", summary: "<b>Serie Original:</b> La trama es una fantasía épica sobre cinco guerreros de antiguas tribus de dinosaurios que son despertados en el presente para luchar contra su archienemiga, la Bruja Bandora. El sexto guerrero, Burai, tiene una de las historias más trágicas de la franquicia.<br><br><b>Adaptación y Diferencias:</b> Power Rangers eliminó toda la trama de fantasía y la reemplazó con la historia de 'adolescentes con energía' en Angel Grove. Rita Repulsa (Bandora) y los monstruos son los mismos, pero el contexto es completamente diferente.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BNDdmMzFmODUtMDIwMy00MTJmLTkzYmItZGNjZTE3Njc0M2QwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", posterAdaptation: "https://images.justwatch.com/poster/8619652/s718/temporada-1.jpg", producer: "Saban Entertainment" },
+            { id: 17, year: 1993, originalTitle: "Gosei Sentai Dairanger", originalTitleEs: "Escuadrón de las Cinco Estrellas Dairanger", originalScore: "9.5/10", adaptationTitle: "MMPR (T2)", adaptationScore: "9/10", summary: "<b>Serie Original:</b> Una de las series más aclamadas, con una fuerte temática de Kung Fu y mitología china. Los Dairanger usan el poder del 'Ki' para luchar contra el Imperio Gorma. La historia es compleja, con coreografías de lucha excepcionales.<br><br><b>Adaptación y Diferencias:</b> Power Rangers solo utilizó el metraje de los robots (Thunderzords) y del Kiba Ranger (White Ranger). Los trajes de los cinco Dairanger principales nunca fueron usados por el equipo de PR, una decisión única en la historia de las adaptaciones.", posterOriginal: "https://image.tmdb.org/t/p/original/cqaxNNvVA01eCWc9rH2IOrvu2Oc.jpg", posterAdaptation: "https://images.justwatch.com/poster/8619781/s718/temporada-2.jpg", producer: "Saban Entertainment" },
+            { id: 18, year: 1994, originalTitle: "Ninja Sentai Kakuranger", originalTitleEs: "Escuadrón Ninja Kakuranger", originalScore: "8/10", adaptationTitle: "MMPR (T3) / Alien Rangers", adaptationScore: "9/10", summary: "<b>Serie Original:</b> Con un tono mucho más cómico y ligero, sigue a los descendientes de legendarios ninjas que luchan contra los demonios Yokai. La serie tiene un estilo visual muy particular, utilizando elementos del manga en pantalla.<br><br><b>Adaptación y Diferencias:</b> MMPR usó el metraje de sus robots (Ninjazords y Shogunzords). Los trajes de los Kakuranger fueron finalmente utilizados para los 'Alien Rangers de Aquitar' en una miniserie.", posterOriginal: "https://i.mydramalist.com/WP7vYW_4f.jpg", posterAdaptation: "https://images.justwatch.com/poster/8619863/s718/temporada-3.jpg", producer: "Saban Entertainment" },
+            { id: 19, year: 1995, originalTitle: "Chōriki Sentai Ohranger", originalTitleEs: "Escuadrón Superpoderoso Ohranger", originalScore: "6/10", adaptationTitle: "Power Rangers Zeo", adaptationScore: "9/10", summary: "<b>Serie Original:</b> Con un tono militarista y muy serio, la trama involucra a una organización militar que usa poderes de una antigua civilización para luchar contra el Imperio de Máquinas Baranoia. Su tono tuvo que ser suavizado a mitad de temporada debido a eventos trágicos en Japón.<br><br><b>Adaptación y Diferencias:</b> Power Rangers Zeo continuó la historia de MMPR, con los héroes encontrando los Cristales Zeo. Es aclamada por su madurez y por ser un gran paso adelante para la franquicia.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BZjU0MTBmZTgtZjMzNi00N2JhLThmYjktM2ZkMjFlZjc2YmI1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", posterAdaptation: "https://media-cache.cinematerial.com/p/500x/vitewque/power-rangers-zeo-dvd-movie-cover.jpg?v=1456419688", producer: "Saban Entertainment" },
+            { id: 20, year: 1996, originalTitle: "Gekisou Sentai Carranger", originalTitleEs: "Escuadrón de Carrera Furiosa Carranger", originalScore: "9/10", adaptationTitle: "Power Rangers Turbo", adaptationScore: "5.5/10", summary: "<b>Serie Original:</b> Carranger es una parodia completa del Super Sentai. Se burla de todos los clichés del género, con héroes que obtienen sus poderes por accidente y villanos incompetentes. Es una comedia pura.<br><br><b>Adaptación y Diferencias:</b> Power Rangers Turbo intentó tomarse en serio el metraje de comedia, lo que resultó en una temporada con un tono increíblemente extraño y a menudo ridículo. Es una de las temporadas más criticadas por los fans.", posterOriginal: "https://static.wikia.nocookie.net/doblaje-fanon/images/b/b5/%3B%3B%3BgekisosentaxaaaaCarranger_Promo_Poster.png/revision/latest?cb=20250617210840&path-prefix=es", posterAdaptation: "https://m.media-amazon.com/images/I/61k-nXj5bOL._UF894,1000_QL80_.jpg", producer: "Saban Entertainment" },
+            { id: 21, year: 1997, originalTitle: "Denji Sentai Megaranger", originalTitleEs: "Escuadrón Electromagnético Megaranger", originalScore: "8.5/10", adaptationTitle: "Power Rangers in Space", adaptationScore: "10/10", summary: "<b>Serie Original:</b> La trama se centra en un grupo de estudiantes de secundaria que son miembros de un club de videojuegos. Descubren que el juego que están probando es en realidad un simulador para luchar contra una invasión de otra dimensión. Combina la vida escolar con la ciencia ficción.<br><br><b>Adaptación y Diferencias:</b> Power Rangers in Space fue una épica espacial que sirvió como conclusión a toda la era Zordon. Es considerada por muchos como la mejor temporada de la historia de PR por su trama, su villana (Astronema) y su emotivo final.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BODFhZmQ2MGMtNzY5Yy00MDYwLWFhN2YtZjE2YmRkZWEwYWI0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", posterAdaptation: "https://i.redd.it/7as4a82atlga1.jpg", producer: "Saban Entertainment" },
+            { id: 22, year: 1998, originalTitle: "Seijuu Sentai Gingaman", originalTitleEs: "Escuadrón de Bestias Estelares Gingaman", originalScore: "7.5/10", adaptationTitle: "Power Rangers Lost Galaxy", adaptationScore: "9/10", summary: "<b>Serie Original:</b> Gingaman es una serie de fantasía sobre guerreros de un bosque mágico que heredan los poderes de las Bestias Estelares para luchar contra piratas espaciales. La trama se centra en la naturaleza y la magia.<br><br><b>Adaptación y Diferencias:</b> Lost Galaxy transformó la historia en una ópera espacial. La trama sigue a los habitantes de una colonia espacial, Terra Venture, que viajan por el universo en busca de un nuevo hogar. Es mucho más oscura y madura que su contraparte.", posterOriginal: "https://static.tvtropes.org/pmwiki/pub/images/gingaman_v1.jpg", posterAdaptation: "https://static.wikia.nocookie.net/international-entertainment-project/images/6/68/Power_Rangers_Lost_Galaxy_-_poster_%28English%29.jpg/revision/latest?cb=20231006075303", producer: "Saban Entertainment" },
+            { id: 23, year: 1999, originalTitle: "Kyuukyuu Sentai GoGoV", originalTitleEs: "Escuadrón de Rescate GoGoFive", originalScore: "8/10", adaptationTitle: "Power Rangers Lightspeed Rescue", adaptationScore: "8/10", summary: "<b>Serie Original:</b> La trama se centra en una familia de cinco hermanos, cada uno trabajando en un servicio de emergencia (bombero, policía, piloto, etc.), que son reclutados por su padre para luchar contra una familia de demonios.<br><br><b>Adaptación y Diferencias:</b> Lightspeed Rescue es una adaptación muy fiel. Mantiene la temática de una organización gubernamental de rescate que lucha contra demonios. La principal diferencia es que los Rangers no son hermanos.", posterOriginal: "https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/gogo5_844px.jpg", posterAdaptation: "https://image.tmdb.org/t/p/original/qyrqyg8N8kd5Yo1ZH3W0t6HVO45.jpg", producer: "Saban Entertainment" },
+            { id: 24, year: 2000, originalTitle: "Mirai Sentai Timeranger", originalTitleEs: "Escuadrón del Futuro Timeranger", originalScore: "10/10", adaptationTitle: "Power Rangers Time Force", adaptationScore: "10/10", summary: "<b>Serie Original:</b> Cuatro oficiales de policía del año 3000 viajan al año 2000 persiguiendo a un criminal. Allí, deben reclutar a un joven del presente para que se convierta en el Red Ranger. Es una serie aclamada por su trama madura y compleja.<br><br><b>Adaptación y Diferencias:</b> Time Force es una de las adaptaciones más fieles y queridas. Mantiene la trama casi intacta, incluyendo el tono serio, los personajes complejos y el romance central. Ambas son consideradas obras maestras.", posterOriginal: "https://image.tmdb.org/t/p/original/eSDxW43b6KoyM9TvtGtZmI7x4sb.jpg", posterAdaptation: "https://i.ebayimg.com/images/g/yl0AAOSwOkxghuSL/s-l1200.jpg", producer: "Saban Entertainment" },
+            { id: 25, year: 2001, originalTitle: "Hyakujuu Sentai Gaoranger", originalTitleEs: "Escuadrón de las Cien Bestias Gaoranger", originalScore: "8/10", adaptationTitle: "Power Rangers Wild Force", adaptationScore: "7/10", summary: "<b>Serie Original:</b> Una sacerdotisa reúne a un grupo de jóvenes elegidos por los 'Power Animals', bestias gigantes que viven en una isla flotante, para defender la Tierra de los demonios Org. Fue la serie del 25º aniversario de Sentai.<br><br><b>Adaptación y Diferencias:</b> Wild Force mantiene la temática ecologista, con los Rangers protegiendo la Tierra de los Orgs. Es más recordada por el épico episodio de aniversario 'Forever Red', que reunió a todos los Red Rangers anteriores. Marca el final de la era Saban original.", posterOriginal: "https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/gaoranger_963px.jpg", posterAdaptation: "https://i.pinimg.com/474x/ff/dc/71/ffdc71a2fef33ca76ea368e79fb8f90a.jpg", producer: "Saban Entertainment" },
+            { id: 26, year: 2002, originalTitle: "Ninpū Sentai Hurricaneger", originalTitleEs: "Escuadrón de Viento Ninja Hurricaneger", originalScore: "8/10", adaptationTitle: "Power Rangers Ninja Storm", adaptationScore: "8/10", summary: "<b>Serie Original:</b> Tres estudiantes de la academia ninja Hayate deben luchar contra los ninjas espaciales Jakanja. Más tarde, se encuentran con los Gouraigers, dos hermanos de una academia rival que inicialmente son sus enemigos.<br><br><b>Adaptación y Diferencias:</b> Ninja Storm sigue una trama muy similar, pero con un tono mucho más cómico y autoconsciente. Fue la primera temporada producida enteramente por Disney y filmada en Nueva Zelanda, marcando un cambio de era.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BM2MwNmNiZGMtZjQ5NS00MmUyLWI3MTQtM2E1OWI3YmIxNGYyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", posterAdaptation: "https://m.media-amazon.com/images/M/MV5BM2JjZDI1YzQtNWFjMC00NWM4LTk3ODUtMzExNGFhN2YzNjY1XkEyXkFqcGc@._V1_.jpg", producer: "Disney" },
+            { id: 27, year: 2003, originalTitle: "Bakuryū Sentai Abaranger", originalTitleEs: "Escuadrón de Dinosaurios Explosivos Abaranger", originalScore: "8.5/10", adaptationTitle: "Power Rangers Dino Thunder", adaptationScore: "9.5/10", summary: "<b>Serie Original:</b> Abaranger es una serie muy enérgica y excéntrica. Una chica de 'Dino Earth' llega a nuestra dimensión para encontrar a tres personas con 'Dino Guts' para luchar contra los Evolien. Los dinosaurios hablan y el Ranger Blanco (AbareKiller) es un villano psicópata y brillante.<br><br><b>Adaptación y Diferencias:</b> Dino Thunder es un clásico de la era Disney, aclamada por traer de vuelta a Tommy Oliver como el legendario Black Ranger y mentor del nuevo equipo. La trama es más coherente y los personajes son muy queridos.", posterOriginal: "https://image.tmdb.org/t/p/original/sDzHEobSQJdAQqFfcu3gTNBVeZg.jpg", posterAdaptation: "https://m.media-amazon.com/images/M/MV5BZjBiOTNjZTgtZmJjYy00MjAyLWI1ODItYTFkYjhkZWUxMWZjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", producer: "Disney" },
+            { id: 28, year: 2004, originalTitle: "Tokusou Sentai Dekaranger", originalTitleEs: "Escuadrón de Investigación Especial Dekaranger", originalScore: "9/10", adaptationTitle: "Power Rangers S.P.D.", adaptationScore: "9.5/10", summary: "<b>Serie Original:</b> Es una serie de ciencia ficción policial, donde cada episodio es un 'caso'. Sigue a una unidad de la Policía Espacial en la Tierra que arresta a criminales alienígenas. Es muy querida por sus personajes y su formato.<br><br><b>Adaptación y Diferencias:</b> S.P.D. es una adaptación fantástica que expande el concepto. Ambientada en el año 2025, la trama sigue al escuadrón B de cadetes que deben convertirse en la primera línea de defensa de la Tierra. Es elogiada por su trama, desarrollo de personajes y tono maduro.", posterOriginal: "https://image.tmdb.org/t/p/original/yATYufb7jMknegJyB14wKsnjKd7.jpg", posterAdaptation: "https://www.scifi-movies.com/images/contenu/data/0003567/affiche-power-rangers-spd-2005-1.jpg", producer: "Disney" },
+            { id: 29, year: 2005, originalTitle: "Mahō Sentai Magiranger", originalTitleEs: "Escuadrón Mágico Magiranger", originalScore: "8.5/10", adaptationTitle: "Power Rangers Mystic Force", adaptationScore: "6.5/10", summary: "<b>Serie Original:</b> La trama se centra en la familia Ozu, cinco hermanos que descubren que su madre era una hechicera celestial y que ellos mismos son magos, destinados a luchar contra el imperio del inframundo Infershia. La magia y la familia son los temas centrales.<br><br><b>Adaptación y Diferencias:</b> Mystic Force mantiene la temática mágica, pero es criticada por centrarse excesivamente en el Red Ranger, dejando al resto del equipo subdesarrollado.", posterOriginal: "https://image.tmdb.org/t/p/original/u7hyk166cDUpP8EjXG4nRcF3aUR.jpg", posterAdaptation: "https://m.media-amazon.com/images/I/81lKdf7hMeL._SL1500_.jpg", producer: "Disney" },
+            { id: 30, year: 2006, originalTitle: "GoGo Sentai Boukenger", originalTitleEs: "Escuadrón Estrépito Boukenger", originalScore: "8/10", adaptationTitle: "Power Rangers Operation Overdrive", adaptationScore: "4/10", summary: "<b>Serie Original:</b> En la serie del 30º aniversario de Sentai, una organización llamada SGS reúne a un equipo de expertos para buscar y proteger 'Precious', artefactos peligrosos de civilizaciones antiguas, de múltiples facciones de villanos que compiten entre sí.<br><br><b>Adaptación y Diferencias:</b> Operation Overdrive es considerada una de las peores temporadas de Power Rangers, criticada por personajes desagradables, una trama floja y un episodio de aniversario decepcionante.", posterOriginal: "https://image.tmdb.org/t/p/original/nN7EqhHvIYa1R0cvYmEfXyo8bet.jpg", posterAdaptation: "https://m.media-amazon.com/images/M/MV5BOWE3OTE1MWYtZTQwZS00MTA4LWI1ZjAtM2UxNjM3Y2ZmZTNkXkEyXkFqcGc@._V1_.jpg", producer: "Disney" },
+            { id: 31, year: 2007, originalTitle: "Juken Sentai Gekiranger", originalTitleEs: "Escuadrón del Puño de la Bestia Gekiranger", originalScore: "9/10", adaptationTitle: "Power Rangers Jungle Fury", adaptationScore: "8.5/10", summary: "<b>Serie Original:</b> Gekiranger es una épica de artes marciales centrada en dos escuelas rivales: el Geki Juken, que imita el espíritu de los animales, y el Rin Juken, que se basa en el dolor y el sufrimiento. La historia de los villanos Rio y Mele es una de las más complejas y trágicas.<br><br><b>Adaptación y Diferencias:</b> Jungle Fury es una joya infravalorada. Adapta bien la temática de artes marciales y es elogiada por su excelente mentor, RJ, y un desarrollo de personajes sólido.", posterOriginal: "https://static.wikia.nocookie.net/powerrangers/images/e/ec/Gekiranger_Poster.jpg/revision/latest?cb=20230130204926", posterAdaptation: "https://m.media-amazon.com/images/M/MV5BYmEzY2RkNDctMzIyMy00NTgyLWJjYjktNjJhMmEwYjUzNGYyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", producer: "Disney" },
+            { id: 32, year: 2008, originalTitle: "Engine Sentai Go-onger", originalTitleEs: "Escuadrón de Motores Go-onger", originalScore: "7.5/10", adaptationTitle: "Power Rangers RPM", adaptationScore: "10/10", summary: "<b>Serie Original:</b> Go-onger es una serie extremadamente cómica y ligera. Los Go-ongers se asocian con vehículos gigantes que hablan, los 'Engines', para luchar contra el clan Gaiark, que quiere contaminar la Tierra. Es ruidosa, colorida y dirigida a un público muy joven.<br><br><b>Adaptación y Diferencias:</b> Power Rangers RPM es una obra maestra que tomó los trajes para crear una historia opuesta. Ambientada en un futuro post-apocalíptico donde un virus informático ha conquistado el planeta, es la temporada más oscura, madura y aclamada por la crítica de toda la franquicia.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BZjMxNGMyYWUtYTUyOS00NTE5LWE1ZTMtNzI3M2M5YWQ0MmZlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", posterAdaptation: "https://assets.mycast.io/posters/power-rangers-rpm-the-movie-fan-casting-poster-237802-medium.jpg?1663029787", producer: "Disney" },
+            { id: 33, year: 2009, originalTitle: "Samurai Sentai Shinkenger", originalTitleEs: "Escuadrón Samurái Shinkenger", originalScore: "10/10", adaptationTitle: "Power Rangers Samurai", adaptationScore: "5/10", summary: "<b>Serie Original:</b> Shinkenger es una de las series más queridas, centrada en un lord samurái y sus vasallos que luchan contra monstruos del inframundo usando el poder del 'Mojikara' (poder de los caracteres kanji). La trama tiene giros argumentales increíbles y está muy arraigada en la cultura japonesa.<br><br><b>Adaptación y Diferencias:</b> Power Rangers Samurai fue una adaptación casi literal, traduciendo los guiones escena por escena. Fue duramente criticada por esto, resultando en actuaciones forzadas y una falta de originalidad. Inicia la 'Era Neo-Saban'.", posterOriginal: "https://image.tmdb.org/t/p/original/omT1VhZy2R1SmQyrqVMmM5P85LF.jpg", posterAdaptation: "https://images.justwatch.com/poster/147747901/s718/power-rangers-super-samurai.jpg", producer: "Saban Brands" },
+            { id: 34, year: 2010, originalTitle: "Tensou Sentai Goseiger", originalTitleEs: "Escuadrón Celestial Goseiger", originalScore: "6/10", adaptationTitle: "Power Rangers Megaforce", adaptationScore: "3/10", summary: "<b>Serie Original:</b> La trama sigue a los Goseigers, miembros de una raza de ángeles guardianes que viven en la Tierra en secreto. Deben proteger el planeta de tres facciones de villanos distintas que atacan una tras otra.<br><br><b>Adaptación y Diferencias:</b> Megaforce es criticada por ser blanda, con personajes planos y una trama poco desarrollada. Sirvió principalmente como preparación para la temporada de aniversario que le seguiría.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BNTg2OTI1ZmItNTFmMC00MTlmLWI0MjgtNDI2M2I2ZWZkNTk2XkEyXkFqcGc@._V1_.jpg", posterAdaptation: "https://m.media-amazon.com/images/M/MV5BMTM5NTIwMjg1Ml5BMl5BanBnXkFtZTcwOTY2MDY0OQ@@._V1_.jpg", producer: "Saban Brands" },
+            { id: 35, year: 2011, originalTitle: "Kaizoku Sentai Gokaiger", originalTitleEs: "Escuadrón Pirata Gokaiger", originalScore: "10/10", adaptationTitle: "Power Rangers Super Megaforce", adaptationScore: "3/10", summary: "<b>Serie Original:</b> Gokaiger es una celebración épica del 35º aniversario de Super Sentai. Un equipo de piratas espaciales llega a la Tierra buscando un tesoro y tienen la habilidad de transformarse en cualquiera de los 34 equipos de Sentai anteriores. Es una carta de amor a la historia de la franquicia.<br><br><b>Adaptación y Diferencias:</b> Super Megaforce es considerada una de las peores temporadas de PR por desperdiciar por completo este concepto, presentando los poderes de equipos 'nunca antes vistos en la Tierra' y culminando en una batalla final legendariamente decepcionante.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BNGUxYTE1ODMtOTkwMC00M2JmLTk3M2EtZDQ2NzdkNmE4MWJkXkEyXkFqcGc@._V1_.jpg", posterAdaptation: "https://image.tmdb.org/t/p/original/rxflGIJHDBDhTF56ZiyGMm4vy27.jpg", producer: "Saban Brands" },
+            { id: 36, year: 2012, originalTitle: "Tokumei Sentai Go-Busters", originalTitleEs: "Escuadrón de Misiones Especiales Go-Busters", originalScore: "8/10", adaptationTitle: "Power Rangers Beast Morphers (2019)", adaptationScore: "8/10", summary: "<b>Serie Original:</b> Con una estética más oscura y de ciencia ficción, sigue a un equipo de espías de élite que luchan contra un virus informático llamado Messiah. Los trajes de cuero y la temática de espionaje la distinguen del resto.<br><br><b>Adaptación y Diferencias:</b> Esta serie fue omitida inicialmente. Años después fue adaptada como Beast Morphers, marcando el inicio de la era Hasbro. La adaptación fue un regreso a la buena forma, con una trama sólida y una sorprendente conexión con la aclamada RPM.", posterOriginal: "https://image.tmdb.org/t/p/original/5z8xQxlrS074NPSjlngFzYhM5t0.jpg", posterAdaptation: "https://i.ebayimg.com/images/g/TlgAAOSwjrpfJHqh/s-l1200.jpg", producer: "Hasbro" },
+            { id: 37, year: 2013, originalTitle: "Zyuden Sentai Kyoryuger", originalTitleEs: "Escuadrón de Bestias Eléctricas Kyoryuger", originalScore: "7.5/10", adaptationTitle: "Power Rangers Dino Charge", adaptationScore: "8.5/10", summary: "<b>Serie Original:</b> Kyoryuger es una serie increíblemente enérgica y alegre con temática de dinosaurios, baile (samba) y música. La trama sigue a los 'héroes más valientes de la historia' mientras luchan contra el Ejército Deboss.<br><br><b>Adaptación y Diferencias:</b> Dino Charge fue muy bien recibida, aclamada por su gran elenco de personajes, su humor y una trama de búsqueda de gemas que se mantuvo entretenida durante dos temporadas.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BOTViNzBiMmQtMWM2My00NzZkLWFjOWEtZmY1NjUzMDIyZmY0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", posterAdaptation: "https://static.thcdn.com/images/small/original//productimg/960/960/11536781-1924834010680308.jpg", producer: "Saban Brands" },
+            { id: 38, year: 2014, originalTitle: "Ressha Sentai ToQger", originalTitleEs: "Escuadrón de Trenes ToQger", originalScore: "8.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Una serie con una trama sorprendentemente emotiva sobre un grupo de amigos que usan el poder de su imaginación para luchar contra las fuerzas de la oscuridad. Viajan en trenes mágicos y pueden intercambiar sus colores. Su temática se consideró 'demasiado japonesa' para ser adaptada.<br><br><b>Adaptación y Diferencias:</b> Omitida para la adaptación.", posterOriginal: "https://image.tmdb.org/t/p/original/4sgX6rrR8N8fXz0SmeHZvATHHjZ.jpg", posterAdaptation: null, producer: null },
+            { id: 39, year: 2015, originalTitle: "Shuriken Sentai Ninninger", originalTitleEs: "Escuadrón de Shurikens Ninninger", originalScore: "5.5/10", adaptationTitle: "Power Rangers Ninja Steel", adaptationScore: "5.5/10", summary: "<b>Serie Original:</b> Una comedia familiar sobre los nietos del 'Último Ninja' que compiten para heredar su título mientras luchan contra un ejército de Yokai. Tiene un tono muy caótico y repetitivo.<br><br><b>Adaptación y Diferencias:</b> Ninja Steel cambió la trama a un show de competencia de guerreros intergaláctico. Mantuvo un tono muy juvenil y cómico, siendo una temporada promedio para muchos.", posterOriginal: "https://media.themoviedb.org/t/p/w500/2VoJLmMD40IlyTkbW38GRfUa6PY.jpg", posterAdaptation: "https://m.media-amazon.com/images/M/MV5BNzA0NTkxYzEtZGQ4Yy00NWUzLWExNzMtODU1OTRjOGEwN2YwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", producer: "Saban Brands" },
+            { id: 40, year: 2016, originalTitle: "Doubutsu Sentai Zyuohger", originalTitleEs: "Escuadrón Animal Zyuohger", originalScore: "7/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Un joven humano se une a cuatro 'Zyumans' (seres de un mundo animal paralelo) para defender la Tierra de invasores espaciales. La serie tiene una temática visual de cubos (similar a Minecraft) y animales.<br><br><b>Adaptación y Diferencias:</b> Omitida para la adaptación.", posterOriginal: "https://image.tmdb.org/t/p/original/2yTiICLCkrfrmtko4SP96EwmKCx.jpg", posterAdaptation: null, producer: null },
+            { id: 41, year: 2017, originalTitle: "Uchu Sentai Kyuranger", originalTitleEs: "Escuadrón Espacial Kyuranger", originalScore: "8/10", adaptationTitle: "Power Rangers Cosmic Fury (Parcial)", adaptationScore: "8.5/10", summary: "<b>Serie Original:</b> Una ópera espacial a gran escala. Comienza con un equipo de 9 rebeldes de toda la galaxia (y luego se expande a 12) que luchan para liberar al universo de la tiranía del Shogunato Espacial Jark Matter.<br><br><b>Adaptación y Diferencias:</b> Power Rangers Cosmic Fury adaptó los Zords y algunos villanos, pero creó trajes originales y una trama que sirve como secuela directa de Dino Fury, en lugar de ser una adaptación directa.", posterOriginal: "https://image.tmdb.org/t/p/original/8iytWcML0eVeuTbw4ckLf1cHb38.jpg", posterAdaptation: "https://pbs.twimg.com/media/F3vjJzFWUAAAZoZ.jpg:large", producer: "Hasbro" },
+            { id: 42, year: 2018, originalTitle: "Kaitou Sentai Lupinranger VS Keisatsu Sentai Patranger", originalTitleEs: "Ladrón Sentai Lupinranger VS Policía Sentai Patranger", originalScore: "8.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Un concepto único con dos equipos de Rangers a la vez. Un equipo de ladrones fantasma que buscan recuperar una colección de artefactos para revivir a sus seres queridos, y un equipo de policía que intenta detenerlos a ellos y al sindicato criminal que también busca los artefactos.<br><br><b>Adaptación y Diferencias:</b> Omitida para la adaptación.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BMzBlMDc5OGMtNjE4OS00NTk3LWFjNWItZWNmMjllZjhkNzAwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", posterAdaptation: null, producer: null },
+            { id: 43, year: 2019, originalTitle: "Kishiryu Sentai Ryusoulger", originalTitleEs: "Escuadrón de Caballeros Dragón Ryusoulger", originalScore: "7/10", adaptationTitle: "Power Rangers Dino Fury", adaptationScore: "9/10", summary: "<b>Serie Original:</b> Una antigua tribu de caballeros que usan el poder de los dinosaurios luchan para proteger la Tierra de la malvada Tribu Druidon. La temática es una mezcla de caballeros medievales y dinosaurios.<br><br><b>Adaptación y Diferencias:</b> Dino Fury es una de las temporadas más aclamadas de la era moderna de Power Rangers. Es elogiada por su gran elenco, una trama que respeta la continuidad y la introducción de temas de inclusión y representación.", posterOriginal: "https://static.wikia.nocookie.net/doblaje-fanon/images/6/63/Ryusoulger.jpg/revision/latest/thumbnail/width/360/height/450?cb=20210608203527&path-prefix=es", posterAdaptation: "https://i.ebayimg.com/00/s/MTYwMFgxMDY2/z/4VsAAOSw7EJhPYmi/$_57.JPG?set_id=8800005007", producer: "Hasbro" },
+            { id: 44, year: 2020, originalTitle: "Mashin Sentai Kiramager", originalTitleEs: "Escuadrón de Máquinas Mágicas Kiramager", originalScore: "8.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Una princesa de una tierra de joyas llega a la Tierra para encontrar a cinco personas con una 'creatividad' brillante (un artista, un gamer, una atleta, un actor y una doctora) para que se asocien con gemas conscientes que se transforman en vehículos. Es una serie muy brillante y optimista.<br><br><b>Adaptación y Diferencias:</b> Omitida para la adaptación.", posterOriginal: "https://static.wikia.nocookie.net/yatoroba/images/8/80/Kiramager_Poster.webp/revision/latest?cb=20231228093223&path-prefix=es", posterAdaptation: null, producer: null },
+            { id: 45, year: 2021, originalTitle: "Kikai Sentai Zenkaiger", originalTitleEs: "Escuadrón Mecánico Zenkaiger", originalScore: "7.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Para el 45º aniversario, un joven humano hereda el poder del primer Sentai y se une a cuatro 'Kikanoids' (robots de mundos paralelos) para luchar contra una tiranía que atrapa mundos. Los otros cuatro miembros están basados en robots gigantes de Sentai pasados. Es una comedia pura.<br><br><b>Adaptación y Diferencias:</b> Omitida para la adaptación.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BOTU2M2Q0YzMtZWMxMy00NzZhLWJhNTgtZTE3MjJmZDA5ZTllXkEyXkFqcGc@._V1_.jpg", posterAdaptation: null, producer: null },
+            { id: 46, year: 2022, originalTitle: "Avataro Sentai Donbrothers", originalTitleEs: "Escuadrón Avatar Donbrothers", originalScore: "9.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Una serie experimental, de culto y muy extraña, inspirada en el cuento japonés de Momotarō. La trama es surrealista y se centra en un grupo de héroes inadaptados que no se conocen entre sí y que luchan contra monstruos nacidos de los deseos humanos. Es aclamada por su guion y personajes únicos.<br><br><b>Adaptación y Diferencias:</b> Omitida para la adaptación.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BMzlmODQxMTQtMzQ5ZS00OGQ0LTg4NTMtYTBmMzdjOTViMDAwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", posterAdaptation: null, producer: null },
+            { id: 47, year: 2023, originalTitle: "Ohsama Sentai King-Ohger", originalTitleEs: "Escuadrón de Reyes King-Ohger", originalScore: "9.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Una épica de fantasía con una trama política compleja. Los cinco héroes son los reyes y reinas de cinco reinos diferentes que deben superar sus diferencias para unirse y luchar contra un imperio que amenaza la Tierra. Utiliza tecnología de producción de vanguardia (pantallas LED en lugar de pantallas verdes).<br><br><b>Adaptación y Diferencias:</b> Omitida para la adaptación.", posterOriginal: "https://static.wikia.nocookie.net/poster/images/7/72/Ohsama_Sentai_King-Ohger_Poster.png/revision/latest?cb=20240105090747", posterAdaptation: null, producer: null },
+            { id: 48, year: 2024, originalTitle: "Bakuage Sentai Boonboomger", originalTitleEs: "Escuadrón Explosivo Boonboomger", originalScore: "En emisión", adaptationTitle: "Por anunciar", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Con una temática de carreras, vehículos y 'creadores', la historia sigue a un equipo de reparto que acepta cualquier encargo, desde entregar paquetes hasta luchar contra los 'Hashiriyan', una pandilla espacial que busca causar estragos en los planetas.<br><br><b>Adaptación y Diferencias:</b> Aún por determinar.", posterOriginal: "https://m.media-amazon.com/images/M/MV5BNDFmYTJiNTMtNTA2MC00YjdiLThhYTEtY2E1M2QwN2UyMWM4XkEyXkFqcGc@._V1_.jpg", posterAdaptation: null, producer: null },
+            { id: 49, year: 2025, originalTitle: "Number 1 Sentai Gozyuger", originalTitleEs: "Escuadrón Número 1 Gozyuger", originalScore: "Próximamente", adaptationTitle: "Por anunciar", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Anunciada oficialmente para ser la 49ª temporada de Super Sentai, pero aún no se han revelado detalles de la trama o la temática.<br><br><b>Adaptación y Diferencias:</b> Aún por determinar.", posterOriginal: "https://static.wikia.nocookie.net/powerrangers/images/1/11/Gozyuger_Poster.jpg/revision/latest/scale-to-width-down/1200?cb=20241224231448", posterAdaptation: null, producer: null },
+        ];
+        
+        // --- Elementos del DOM ---
+        const mainScreen = document.getElementById('main-screen');
+        const detailScreen = document.getElementById('detail-screen');
+        const seriesGrid = document.getElementById('series-grid');
+        const detailContent = document.getElementById('detail-content');
+        const backBtn = document.getElementById('back-btn');
+        const btnOriginal = document.getElementById('btn-original');
+        const btnAdaptacion = document.getElementById('btn-adaptacion');
+        const body = document.body;
+        const sortByEl = document.getElementById('sort-by');
+        const sortOrderEl = document.getElementById('sort-order');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+
+        // --- Estado de la App ---
+        let currentView = 'original'; // 'original' o 'adaptacion'
+        let sortState = { by: 'year', order: 'asc' };
+        let currentlyDisplayedIds = [];
+        let currentDetailIndex = -1;
+
+        // --- Lógica de Renderizado y Orden ---
+        function getScoreValue(scoreString) {
+            if (typeof scoreString !== 'string' || !scoreString.includes('/')) return 0;
+            return parseFloat(scoreString.split('/')[0]);
+        }
+
+        function sortData(data) {
+            const sorted = [...data].sort((a, b) => {
+                if (sortState.by === 'year') {
+                    return a.year - b.year;
+                } else if (sortState.by === 'score') {
+                    const scoreA = getScoreValue(currentView === 'original' ? a.originalScore : a.adaptationScore);
+                    const scoreB = getScoreValue(currentView === 'original' ? b.originalScore : b.adaptationScore);
+                    return scoreB - scoreA; // Default to descending for score
+                }
+                return 0;
+            });
+
+            if ((sortState.by === 'year' && sortState.order === 'desc') || (sortState.by === 'score' && sortState.order === 'asc')) {
+                sorted.reverse();
+            }
+            
+            return sorted;
+        }
+        
+        function renderMainScreen() {
+            let dataToRender = (currentView === 'original')
+                ? seriesData
+                : seriesData.filter(s => s.adaptationTitle !== 'No adaptada' && s.adaptationTitle !== 'Por anunciar');
+            
+            dataToRender = sortData(dataToRender);
+            currentlyDisplayedIds = dataToRender.map(s => s.id);
+            seriesGrid.innerHTML = '';
+
+            dataToRender.forEach(series => {
+                const isOriginalView = currentView === 'original';
+                const poster = isOriginalView ? series.posterOriginal : series.posterAdaptation;
+                const title = isOriginalView ? series.originalTitle : series.adaptationTitle;
+                const titleEs = isOriginalView ? series.originalTitleEs : '';
+                const isAdapted = series.adaptationTitle !== 'No adaptada' && series.adaptationTitle !== 'Por anunciar';
+
+                const card = document.createElement('div');
+                card.className = 'card bg-gray-900 rounded-lg overflow-hidden shadow-lg cursor-pointer fade-in';
+                card.dataset.id = series.id;
+                
+                card.innerHTML = `
+                    <div class="image-container aspect-[3/4.3] bg-gray-700">
+                        <img src="${poster}" alt="Portada de ${title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x600/1a202c/4a5568?text=Imagen+no+disponible';">
+                        ${isAdapted ? '<div class="adapted-dot"></div>' : ''}
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-bold text-sm truncate">${title}</h3>
+                        ${titleEs ? `<p class="text-xs text-gray-400 truncate">${titleEs}</p>` : ''}
+                        <p class="text-xs text-gray-500 mt-1">${series.year}</p>
+                    </div>
+                `;
+                seriesGrid.appendChild(card);
+            });
+        }
+
+        function renderDetailScreen(seriesId) {
+            const series = seriesData.find(s => s.id === parseInt(seriesId));
+            if (!series) return;
+            
+            currentDetailIndex = currentlyDisplayedIds.indexOf(series.id);
+
+            const isOriginalView = currentView === 'original';
+            const poster = isOriginalView || !series.posterAdaptation ? series.posterOriginal : series.posterAdaptation;
+            const mainTitle = isOriginalView ? series.originalTitle : series.adaptationTitle;
+            const subTitle = isOriginalView ? `${series.originalTitleEs} (${series.year})` : `(${series.year})`;
+
+            const isAdapted = series.adaptationTitle !== 'No adaptada' && series.adaptationTitle !== 'Por anunciar';
+            let switchButtonHTML = '';
+            if(isAdapted){
+                const switchButtonText = isOriginalView ? 'Ver Adaptación &rarr;' : '&larr; Ver Original';
+                switchButtonHTML = `<button id="switch-view-btn" data-series-id="${series.id}" class="mt-4 w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300">${switchButtonText}</button>`;
+            }
+
+            detailContent.innerHTML = `
+                <div class="md:w-1/3 flex-shrink-0">
+                    <img src="${poster}" alt="Portada de ${mainTitle}" class="rounded-lg w-full shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/400x600/1a202c/4a5568?text=Imagen+no+disponible';">
+                    ${switchButtonHTML}
+                </div>
+                <div class="md:w-2/3 mt-6 md:mt-0">
+                    <h2 class="text-3xl font-bold">${mainTitle}</h2>
+                    <p class="text-lg text-gray-400 mb-4">${subTitle}</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-semibold text-orange-400">Puntaje Original (Sentai)</h4>
+                            <p class="text-2xl font-bold">${series.originalScore}</p>
+                        </div>
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-semibold text-orange-400">Puntaje Adaptación (PR)</h4>
+                            <p class="text-2xl font-bold">${series.adaptationScore}</p>
+                        </div>
+                    </div>
+                     
+                    ${series.producer ? `
+                    <div class="mb-6 bg-gray-800 p-4 rounded-lg">
+                        <p class="text-sm"><span class="font-bold text-gray-400">Productor de la Adaptación:</span> ${series.producer}</p>
+                    </div>
+                    ` : ''}
+
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-xl mb-2">Análisis Detallado</h4>
+                        <p class="text-gray-300 leading-relaxed">${series.summary}</p>
+                    </div>
+                    
+                    ${series.adaptationTitle !== 'No adaptada' ? `
+                    <div class="mt-4 bg-gray-800 p-4 rounded-lg">
+                        <p class="text-sm"><span class="font-bold text-gray-400">Adaptado a:</span> ${series.adaptationTitle}</p>
+                    </div>
+                    ` : `
+                    <div class="mt-4 bg-gray-800 p-4 rounded-lg">
+                        <p class="text-sm font-bold text-gray-400">Esta serie no fue adaptada a Power Rangers.</p>
+                    </div>`}
+                </div>
+            `;
+
+            // Add event listener for the new switch button
+            const switchBtn = document.getElementById('switch-view-btn');
+            if (switchBtn) {
+                switchBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    currentView = (currentView === 'original') ? 'adaptacion' : 'original';
+                    updateView(currentView); // Update global styles
+                    renderDetailScreen(switchBtn.dataset.seriesId); // Re-render detail screen
+                });
+            }
+
+            // Update nav buttons
+            prevBtn.disabled = currentDetailIndex <= 0;
+            nextBtn.disabled = currentDetailIndex >= currentlyDisplayedIds.length - 1;
+
+            mainScreen.classList.add('hidden');
+            detailScreen.classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function updateView(view) {
+            currentView = view;
+            if (view === 'original') {
+                body.classList.remove('bg-slate-900');
+                body.classList.add('bg-gray-800');
+                btnOriginal.classList.add('bg-orange-600');
+                btnOriginal.classList.remove('bg-gray-700');
+                btnAdaptacion.classList.remove('bg-orange-600');
+                btnAdaptacion.classList.add('bg-gray-700');
+            } else {
+                body.classList.remove('bg-gray-800');
+                body.classList.add('bg-slate-900');
+                btnAdaptacion.classList.add('bg-orange-600');
+                btnAdaptacion.classList.remove('bg-gray-700');
+                btnOriginal.classList.remove('bg-orange-600');
+                btnOriginal.classList.add('bg-gray-700');
+            }
+            // Only render main screen if it's visible
+            if(!mainScreen.classList.contains('hidden')){
+                renderMainScreen();
+            }
+        }
+
+        // --- Event Listeners ---
+        
+        btnOriginal.addEventListener('click', () => {
+            updateView('original');
+            renderMainScreen();
+        });
+        btnAdaptacion.addEventListener('click', () => {
+            updateView('adaptacion');
+            renderMainScreen();
+        });
+
+        seriesGrid.addEventListener('click', (e) => {
+            const card = e.target.closest('.card');
+            if (card) {
+                renderDetailScreen(card.dataset.id);
+            }
+        });
+
+        backBtn.addEventListener('click', () => {
+            detailScreen.classList.add('hidden');
+            mainScreen.classList.remove('hidden');
+            // We need to re-render the main screen to apply any view changes that happened in detail view
+            renderMainScreen();
+        });
+
+        sortByEl.addEventListener('change', (e) => {
+            sortState.by = e.target.value;
+            sortState.order = (sortState.by === 'year') ? 'asc' : 'desc';
+            sortOrderEl.firstElementChild.style.transform = (sortState.order === 'asc') ? 'rotate(0deg)' : 'rotate(180deg)';
+            renderMainScreen();
+        });
+
+        sortOrderEl.addEventListener('click', () => {
+            sortState.order = sortState.order === 'asc' ? 'desc' : 'asc';
+            sortOrderEl.firstElementChild.style.transform = (sortState.order === 'asc') ? 'rotate(0deg)' : 'rotate(180deg)';
+            renderMainScreen();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentDetailIndex > 0) {
+                renderDetailScreen(currentlyDisplayedIds[currentDetailIndex - 1]);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentDetailIndex < currentlyDisplayedIds.length - 1) {
+                renderDetailScreen(currentlyDisplayedIds[currentDetailIndex + 1]);
+            }
+        });
+
+        // --- Inicialización ---
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            sortOrderEl.firstElementChild.style.transform = (sortState.order === 'asc') ? 'rotate(0deg)' : 'rotate(180deg)';
+            updateView('original');
+            renderMainScreen();
+        });
+
+    </script>
+</body>
+</html>
+
