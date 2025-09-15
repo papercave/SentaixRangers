@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0 L20 55 L45 55 L30 100 L80 45 L55 45 Z' fill='%23f97316'/%3E%3C/svg%3E">
     <title>Guía Interactiva Sentai-Rangers</title>
+     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const faviconUrls = [
+                "data:image/svg+xml,%3Csvg xmlns='https://lh3.googleusercontent.com/d/1K2uysrfmeZ91_0lQBZB0XPvxyd7ubtze' viewBox='0 0 100 100'%3E%3Cpath d='M50 0 L20 55 L45 55 L30 100 L80 45 L55 45 Z' fill='%23f97316'/%3E%3C/svg%3E",
+                "data:image/svg+xml,%3Csvg xmlns='https://lh3.googleusercontent.com/d/13gUdnZET-1sRem5Eex7C9UWG-Vn31zGg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0 L20 55 L45 55 L30 100 L80 45 L55 45 Z' fill='%23ef4444'/%3E%3C/svg%3E",
+                "data:image/svg+xml,%3Csvg xmlns='https://lh3.googleusercontent.com/d/1_-VMdqEHZYRqbNHhCy7ISP_bvVUGkyYS' viewBox='0 0 100 100'%3E%3Cpath d='M50 0 L20 55 L45 55 L30 100 L80 45 L55 45 Z' fill='%23ef4444'/%3E%3C/svg%3E",
+                "data:image/svg+xml,%3Csvg xmlns='https://lh3.googleusercontent.com/d/1C8ItXQkKRLh2M8VsG7E34RX0RAPHhZT-' viewBox='0 0 100 100'%3E%3Cpath d='M50 0 L20 55 L45 55 L30 100 L80 45 L55 45 Z' fill='%23ef4444'/%3E%3C/svg%3E",
+                "data:image/svg+xml,%3Csvg xmlns='https://lh3.googleusercontent.com/d/1gf4zZYj09KvKXTHohlN_2OXuZ83xfqKZ' viewBox='0 0 100 100'%3E%3Cpath d='M50 0 L20 55 L45 55 L30 100 L80 45 L55 45 Z' fill='%232563eb'/%3E%3C/svg%3E",
+                "data:image/svg+xml,%3Csvg xmlns='https://lh3.googleusercontent.com/d/1VwSPvnDf45Nik1F_Qi7_0ZHFvgTfS74V' viewBox='0 0 100 100'%3E%3Cpath d='M50 0 L20 55 L45 55 L30 100 L80 45 L55 45 Z' fill='%2322c55e'/%3E%3C/svg%3E" 
+            ];
+
+            const faviconTag = document.getElementById('favicon');
+            const randomIndex = Math.floor(Math.random() * faviconUrls.length);
+            faviconTag.href = faviconUrls[randomIndex];
+        });
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -400,6 +416,7 @@
     </script>
 </body>
 </html>
+
 
 
 
