@@ -6,6 +6,7 @@
     <title>Guía Interactiva Sentai-Rangers</title>
     <link id="favicon" rel="icon" href="">
     <script>
+        // --- Favicon Rotator ---
         document.addEventListener('DOMContentLoaded', () => {
             const faviconUrls = [
                 "https://lh3.googleusercontent.com/d/1K2uysrfmeZ91_0lQBZB0XPvxyd7ubtze",
@@ -15,10 +16,11 @@
                 "https://lh3.googleusercontent.com/d/1gf4zZYj09KvKXTHohlN_2OXuZ83xfqKZ",
                 "https://lh3.googleusercontent.com/d/1VwSPvnDf45Nik1F_Qi7_0ZHFvgTfS74V"
             ];
-
             const faviconTag = document.getElementById('favicon');
-            const randomIndex = Math.floor(Math.random() * faviconUrls.length);
-            faviconTag.href = faviconUrls[randomIndex];
+            if (faviconTag) {
+                const randomIndex = Math.floor(Math.random() * faviconUrls.length);
+                faviconTag.href = faviconUrls[randomIndex];
+            }
         });
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -71,6 +73,13 @@
             border: 2px solid white;
             box-shadow: 0 0 8px rgba(0,0,0,0.6);
         }
+        /* Modal Styles */
+        #form-modal {
+            transition: opacity 0.3s ease;
+        }
+        #modal-content {
+            transition: transform 0.3s ease;
+        }
     </style>
 </head>
 <body class="bg-gray-800 text-white">
@@ -94,11 +103,19 @@
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                         </button>
                     </div>
+                     <button id="add-series-header-btn" title="Agregar Nueva Serie" class="p-2 rounded-lg bg-orange-600 hover:bg-orange-700 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    </button>
                 </div>
             </header>
             <main id="series-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
                 <!-- Las tarjetas de series se insertarán aquí -->
             </main>
+            <div class="flex justify-center mt-8">
+                 <button id="add-series-footer-btn" title="Agregar Nueva Serie" class="p-4 rounded-full bg-orange-600 hover:bg-orange-700 transition-transform hover:scale-110">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                </button>
+            </div>
         </div>
 
         <!-- Pantalla de Detalles -->
@@ -117,9 +134,75 @@
             </div>
         </div>
     </div>
+    
+    <!-- Formulario Modal para Agregar/Editar -->
+    <div id="form-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50 hidden opacity-0">
+        <div id="modal-content" class="bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 transform scale-95">
+            <h2 id="modal-title" class="text-2xl font-bold mb-6">Agregar Nueva Serie</h2>
+            <form id="series-form">
+                <input type="hidden" id="series-id">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="originalTitle" class="block text-sm font-medium text-gray-300">Título Original</label>
+                        <input type="text" id="originalTitle" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 text-white">
+                    </div>
+                    <div>
+                        <label for="originalTitleEs" class="block text-sm font-medium text-gray-300">Título Traducido</label>
+                        <input type="text" id="originalTitleEs" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 text-white">
+                    </div>
+                     <div>
+                        <label for="posterOriginal" class="block text-sm font-medium text-gray-300">Link Portada Original</label>
+                        <input type="text" id="posterOriginal" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 text-white">
+                    </div>
+                    <div>
+                        <label for="posterAdaptation" class="block text-sm font-medium text-gray-300">Link Portada Adaptación</label>
+                        <input type="text" id="posterAdaptation" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 text-white">
+                    </div>
+                     <div>
+                        <label for="adaptationTitle" class="block text-sm font-medium text-gray-300">Título Adaptado</label>
+                        <input type="text" id="adaptationTitle" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 text-white">
+                    </div>
+                     <div>
+                        <label for="year" class="block text-sm font-medium text-gray-300">Año</label>
+                        <input type="number" id="year" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 text-white">
+                    </div>
+                    <div>
+                        <label for="originalScore" class="block text-sm font-medium text-gray-300">Puntaje Original (ej: 8.5/10)</label>
+                        <input type="text" id="originalScore" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 text-white">
+                    </div>
+                    <div>
+                        <label for="adaptationScore" class="block text-sm font-medium text-gray-300">Puntaje Adaptación (ej: 9/10)</label>
+                        <input type="text" id="adaptationScore" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 text-white">
+                    </div>
+                     <div class="sm:col-span-2">
+                        <label for="producer" class="block text-sm font-medium text-gray-300">Productora</label>
+                        <input type="text" id="producer" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 text-white">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="summary" class="block text-sm font-medium text-gray-300">Descripción / Análisis</label>
+                        <textarea id="summary" rows="6" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 text-white"></textarea>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-between items-center">
+                    <div>
+                        <button type="button" id="delete-btn" class="py-2 px-4 bg-red-700 hover:bg-red-600 rounded-md font-semibold transition-colors flex items-center hidden">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg>
+                            <span>Eliminar</span>
+                        </button>
+                    </div>
+                    <div class="space-x-3">
+                        <button type="button" id="cancel-btn" class="py-2 px-4 bg-gray-600 hover:bg-gray-500 rounded-md font-semibold transition-colors">Cancelar</button>
+                        <button type="submit" class="py-2 px-4 bg-orange-600 hover:bg-orange-700 rounded-md font-semibold transition-colors">Guardar Cambios</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <script>
-        const seriesData = [
+        // --- BASE DE DATOS INICIAL ---
+        const initialSeriesData = [
             { id: 1, year: 1975, originalTitle: "Himitsu Sentai Gorenger", originalTitleEs: "Escuadrón Secreto Gorenger", originalScore: "7.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Fue la serie que lo empezó todo, estableciendo el concepto de un equipo de cinco héroes con colores distintivos. La trama se centra en una organización secreta que recluta a cinco jóvenes para luchar contra el 'Ejército de la Cruz Negra', que busca dominar el mundo. Su tono es una mezcla de espionaje y acción.<br><br><b>Adaptación y Diferencias:</b> Nunca fue adaptada a Power Rangers. La franquicia americana comenzaría a adaptar series mucho después y esta no presentaba un robot gigante combinable, un elemento que se volvería estándar más adelante.", posterOriginal: "https://lh3.googleusercontent.com/d/1u8ZFhbJ2cykMiBw3-4kFgFTHFfIRotmk", posterAdaptation: null, producer: null },
             { id: 2, year: 1977, originalTitle: "J.A.K.Q. Dengekitai", originalTitleEs: "J.A.K.Q. Equipo de Ataque Eléctrico", originalScore: "6/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Con un tono más oscuro y maduro, esta serie sigue a cuatro jóvenes que son convertidos en cíborgs para luchar contra una organización criminal global llamada 'CRIME'. Cada miembro está basado en una carta de póker (As, Diamante, Trébol, Corazón).<br><br><b>Adaptación y Diferencias:</b> No fue adaptada. Es una de las temporadas más cortas y su tono serio no encajaba con el molde que Power Rangers adoptaría. Fue un fracaso comercial en su momento.", posterOriginal: "https://lh3.googleusercontent.com/d/1fYvhKsgdz6llpFVaeub35rVrui38wYTj", posterAdaptation: null, producer: null },
             { id: 3, year: 1979, originalTitle: "Battle Fever J", originalTitleEs: "Fiebre de Batalla J", originalScore: "6.5/10", adaptationTitle: "No adaptada", adaptationScore: "N/A", summary: "<b>Serie Original:</b> Esta es la serie que oficialmente acuñó el término 'Super Sentai' y, crucialmente, fue la primera en introducir un robot gigante, el Battle Fever Robo. La trama involucra a un equipo de agentes de diferentes partes del mundo (Japón, Francia, URSS, Kenia y América) que luchan contra la sociedad secreta 'Egos'.<br><br><b>Adaptación y Diferencias:</b> No fue adaptada. Su origen como una colaboración con Marvel Comics es una curiosidad histórica, y la introducción del Mecha cambió la fórmula para siempre.", posterOriginal: "https://lh3.googleusercontent.com/d/1L0EfdppQ5_d8Q-SpaSqD8QiUtdx67bB8", posterAdaptation: null, producer: null },
@@ -184,6 +267,13 @@
         const sortOrderEl = document.getElementById('sort-order');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
+        const modal = document.getElementById('form-modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalTitle = document.getElementById('modal-title');
+        const seriesForm = document.getElementById('series-form');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const addSeriesHeaderBtn = document.getElementById('add-series-header-btn');
+        const addSeriesFooterBtn = document.getElementById('add-series-footer-btn');
 
 
         // --- Estado de la App ---
@@ -191,6 +281,21 @@
         let sortState = { by: 'year', order: 'asc' };
         let currentlyDisplayedIds = [];
         let currentDetailIndex = -1;
+        let seriesData = [];
+
+        // --- Lógica de Almacenamiento Local ---
+        function loadSeriesData() {
+            const savedData = localStorage.getItem('rangerGuideData');
+            if (savedData) {
+                seriesData = JSON.parse(savedData);
+            } else {
+                seriesData = JSON.parse(JSON.stringify(initialSeriesData)); // Deep copy
+            }
+        }
+
+        function saveSeriesData() {
+            localStorage.setItem('rangerGuideData', JSON.stringify(seriesData));
+        }
 
         // --- Lógica de Renderizado y Orden ---
         function getScoreValue(scoreString) {
@@ -220,7 +325,7 @@
         function renderMainScreen() {
             let dataToRender = (currentView === 'original')
                 ? seriesData
-                : seriesData.filter(s => s.adaptationTitle !== 'No adaptada' && s.adaptationTitle !== 'Por anunciar');
+                : seriesData.filter(s => s.adaptationTitle && s.adaptationTitle !== 'No adaptada' && s.adaptationTitle !== 'Por anunciar');
             
             dataToRender = sortData(dataToRender);
             currentlyDisplayedIds = dataToRender.map(s => s.id);
@@ -231,7 +336,7 @@
                 const poster = isOriginalView ? series.posterOriginal : series.posterAdaptation;
                 const title = isOriginalView ? series.originalTitle : series.adaptationTitle;
                 const titleEs = isOriginalView ? series.originalTitleEs : '';
-                const isAdapted = series.adaptationTitle !== 'No adaptada' && series.adaptationTitle !== 'Por anunciar';
+                const isAdapted = series.adaptationTitle && series.adaptationTitle !== 'No adaptada' && series.adaptationTitle !== 'Por anunciar';
 
                 const card = document.createElement('div');
                 card.className = 'card bg-gray-900 rounded-lg overflow-hidden shadow-lg cursor-pointer fade-in';
@@ -263,17 +368,20 @@
             const mainTitle = isOriginalView ? series.originalTitle : series.adaptationTitle;
             const subTitle = isOriginalView ? `${series.originalTitleEs} (${series.year})` : `(${series.year})`;
 
-            const isAdapted = series.adaptationTitle !== 'No adaptada' && series.adaptationTitle !== 'Por anunciar';
+            const isAdapted = series.adaptationTitle && series.adaptationTitle !== 'No adaptada' && series.adaptationTitle !== 'Por anunciar';
             let switchButtonHTML = '';
             if(isAdapted){
                 const switchButtonText = isOriginalView ? 'Ver Adaptación &rarr;' : '&larr; Ver Original';
                 switchButtonHTML = `<button id="switch-view-btn" data-series-id="${series.id}" class="mt-4 w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300">${switchButtonText}</button>`;
             }
+            
+            const editButtonHTML = `<button id="edit-btn" data-series-id="${series.id}" class="mt-2 w-full bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center">Editar <svg class="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg></button>`;
 
             detailContent.innerHTML = `
                 <div class="md:w-1/3 flex-shrink-0">
                     <img src="${poster}" alt="Portada de ${mainTitle}" class="rounded-lg w-full shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/400x600/1a202c/4a5568?text=Imagen+no+disponible';">
                     ${switchButtonHTML}
+                    ${editButtonHTML}
                 </div>
                 <div class="md:w-2/3 mt-6 md:mt-0">
                     <h2 class="text-3xl font-bold">${mainTitle}</h2>
@@ -301,7 +409,7 @@
                         <p class="text-gray-300 leading-relaxed">${series.summary}</p>
                     </div>
                     
-                    ${series.adaptationTitle !== 'No adaptada' ? `
+                    ${isAdapted ? `
                     <div class="mt-4 bg-gray-800 p-4 rounded-lg">
                         <p class="text-sm"><span class="font-bold text-gray-400">Adaptado a:</span> ${series.adaptationTitle}</p>
                     </div>
@@ -312,15 +420,20 @@
                 </div>
             `;
 
-            // Add event listener for the new switch button
+            // Add event listeners
             const switchBtn = document.getElementById('switch-view-btn');
             if (switchBtn) {
                 switchBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     currentView = (currentView === 'original') ? 'adaptacion' : 'original';
-                    updateView(currentView); // Update global styles
-                    renderDetailScreen(switchBtn.dataset.seriesId); // Re-render detail screen
+                    updateView(currentView);
+                    renderDetailScreen(switchBtn.dataset.seriesId);
                 });
+            }
+            
+            const editBtn = document.getElementById('edit-btn');
+            if(editBtn){
+                 editBtn.addEventListener('click', () => openModal(parseInt(editBtn.dataset.seriesId)));
             }
 
             // Update nav buttons
@@ -349,13 +462,129 @@
                 btnOriginal.classList.remove('bg-orange-600');
                 btnOriginal.classList.add('bg-gray-700');
             }
-            // Only render main screen if it's visible
             if(!mainScreen.classList.contains('hidden')){
                 renderMainScreen();
             }
         }
+        
+        // --- Modal and Form Logic ---
+        function openModal(seriesId = null) {
+            seriesForm.reset();
+            const deleteBtn = document.getElementById('delete-btn');
+            
+            // Reset delete button state
+            deleteBtn.innerHTML = `<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd"></path></svg> <span>Eliminar</span>`;
+            deleteBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-400');
+            deleteBtn.classList.add('bg-red-700', 'hover:bg-red-600');
+            deleteBtn.dataset.confirming = 'false';
 
+            if (seriesId) {
+                // Edit mode
+                modalTitle.textContent = 'Editar Serie';
+                const series = seriesData.find(s => s.id === seriesId);
+                if (!series) return;
+                document.getElementById('series-id').value = series.id;
+                document.getElementById('originalTitle').value = series.originalTitle;
+                document.getElementById('originalTitleEs').value = series.originalTitleEs;
+                document.getElementById('posterOriginal').value = series.posterOriginal || '';
+                document.getElementById('posterAdaptation').value = series.posterAdaptation || '';
+                document.getElementById('adaptationTitle').value = series.adaptationTitle;
+                document.getElementById('year').value = series.year;
+                document.getElementById('originalScore').value = series.originalScore;
+                document.getElementById('adaptationScore').value = series.adaptationScore;
+                document.getElementById('producer').value = series.producer || '';
+                document.getElementById('summary').value = series.summary;
+                deleteBtn.classList.remove('hidden');
+                deleteBtn.dataset.seriesId = seriesId;
+            } else {
+                // Add mode
+                modalTitle.textContent = 'Agregar Nueva Serie';
+                document.getElementById('series-id').value = '';
+                deleteBtn.classList.add('hidden');
+            }
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        seriesForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('series-id').value ? parseInt(document.getElementById('series-id').value) : null;
+            const formData = {
+                year: parseInt(document.getElementById('year').value),
+                originalTitle: document.getElementById('originalTitle').value,
+                originalTitleEs: document.getElementById('originalTitleEs').value,
+                originalScore: document.getElementById('originalScore').value,
+                adaptationTitle: document.getElementById('adaptationTitle').value,
+                adaptationScore: document.getElementById('adaptationScore').value,
+                summary: document.getElementById('summary').value,
+                posterOriginal: document.getElementById('posterOriginal').value,
+                posterAdaptation: document.getElementById('posterAdaptation').value,
+                producer: document.getElementById('producer').value,
+            };
+
+            if (id) {
+                // Update existing series
+                const index = seriesData.findIndex(s => s.id === id);
+                if (index !== -1) {
+                    seriesData[index] = { ...seriesData[index], ...formData };
+                }
+            } else {
+                // Add new series
+                const newId = seriesData.length > 0 ? Math.max(...seriesData.map(s => s.id)) + 1 : 1;
+                seriesData.push({ id: newId, ...formData });
+            }
+            
+            saveSeriesData();
+            closeModal();
+            renderMainScreen();
+            if (id && !detailScreen.classList.contains('hidden')) {
+                renderDetailScreen(id);
+            }
+        });
+        
         // --- Event Listeners ---
+        const deleteBtn = document.getElementById('delete-btn');
+        deleteBtn.addEventListener('click', () => {
+            const idToDelete = parseInt(deleteBtn.dataset.seriesId);
+            if (!idToDelete) return;
+
+            if (deleteBtn.dataset.confirming !== 'true') {
+                deleteBtn.innerHTML = '<span>¿Seguro? ¡Eliminar!</span>';
+                deleteBtn.classList.remove('bg-red-700', 'hover:bg-red-600');
+                deleteBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-400');
+                deleteBtn.dataset.confirming = 'true';
+            } else {
+                const index = seriesData.findIndex(s => s.id === idToDelete);
+                if (index > -1) {
+                    seriesData.splice(index, 1);
+                    saveSeriesData();
+                    closeModal();
+                    if (!detailScreen.classList.contains('hidden')) {
+                        backBtn.click();
+                    } else {
+                        renderMainScreen();
+                    }
+                }
+            }
+        });
+        
+        addSeriesHeaderBtn.addEventListener('click', () => openModal());
+        addSeriesFooterBtn.addEventListener('click', () => openModal());
+        cancelBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
         
         btnOriginal.addEventListener('click', () => {
             updateView('original');
@@ -369,14 +598,13 @@
         seriesGrid.addEventListener('click', (e) => {
             const card = e.target.closest('.card');
             if (card) {
-                renderDetailScreen(card.dataset.id);
+                renderDetailScreen(parseInt(card.dataset.id));
             }
         });
 
         backBtn.addEventListener('click', () => {
             detailScreen.classList.add('hidden');
             mainScreen.classList.remove('hidden');
-            // We need to re-render the main screen to apply any view changes that happened in detail view
             renderMainScreen();
         });
 
@@ -408,6 +636,7 @@
         // --- Inicialización ---
         
         document.addEventListener('DOMContentLoaded', () => {
+            loadSeriesData();
             sortOrderEl.firstElementChild.style.transform = (sortState.order === 'asc') ? 'rotate(0deg)' : 'rotate(180deg)';
             updateView('original');
             renderMainScreen();
@@ -416,14 +645,4 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
 
